@@ -2,7 +2,11 @@ module API
   module V1
     class EarningsController < ApplicationController
       def index
-        earnings = Earning.all
+        if beat = params[:earnings_beat]
+           earnings = Earning.earnings_beat beat
+        else
+          earnings = Earning.all
+        end
         render json: earnings, each_serializer: EarningSerializer, root: false, status: 200
       end
     end
