@@ -36,4 +36,15 @@ class ListingEarningsTest < ActionDispatch::IntegrationTest
     json_response = [{:company_symbol=>'ATEST', :earnings_released_on=>"05/09/2016", :earnings=>"0.50", expectation: '0.45', :earnings_last_q=>nil, :revenue=>nil}]
     assert_equal atest, json_response
   end
+
+  test 'list filted by #earnings_beat and #expectation_beat' do
+    Earning.create!(company_symbol: 'ABEAT', earnings_released_on: '2016-05-09 11:51:26', earnings: '0.50', expectation: '0.30', earnings_last_q: '0.20' )
+    get '/earnings?earnings_beat=100&expectation_beat=30'
+    assert_equal Mime::JSON, response.content_type
+    assert_equal 200, response.status
+    earnings = JSON.parse(response.body, symbolize_names: true)
+    a_beat = earnings.select { |e| e[:company_symbol] = 'ABEAT' }
+    json_response = [{:company_symbol=>'ABEAT', :earnings_released_on=>"05/09/2016", :earnings=>"0.50", expectation: '0.30', :earnings_last_q=>'0.20', :revenue=>nil}]
+    assert_equal a_beat, json_response
+  end
 end
