@@ -8,7 +8,7 @@ class ListingEarningsTest < ActionDispatch::IntegrationTest
     assert_equal 200, response.status
   end
 
-  test 'list filtered by earnings data' do
+  test 'list filtered by earnings_beat data' do
     Earning.create!(company_symbol: 'ITEST', earnings_released_on: '2016-05-09 11:51:26', earnings: '0.50', earnings_last_q: '0.25')
     get '/earnings?earnings_beat=25', format: :json
     assert_equal Mime::JSON, response.content_type
@@ -24,5 +24,16 @@ class ListingEarningsTest < ActionDispatch::IntegrationTest
     assert_equal '05/09/2016', values[:earnings_released_on]
     assert_equal '0.50', values[:earnings]
     assert_equal '0.25', values[:earnings_last_q]
+  end
+
+  test 'list filtered by expectation_beat' do
+    Earning.create!(company_symbol: 'ATEST', earnings_released_on: '2016-05-09 11:51:26', earnings: '0.50', expectation: '0.45')
+    get '/earnings?expectation_beat=10', format: :json
+    assert_equal Mime::JSON, response.content_type
+    assert_equal 200, response.status
+    earnings = JSON.parse(response.body, symbolize_names: true)
+    atest = earnings.select { |e| e[:company_symbol] == 'ATEST'}
+    json_response = [{:company_symbol=>'ATEST', :earnings_released_on=>"05/09/2016", :earnings=>"0.50", expectation: '0.45', :earnings_last_q=>nil, :revenue=>nil}]
+    assert_equal atest, json_response
   end
 end
