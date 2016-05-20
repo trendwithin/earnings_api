@@ -1,3 +1,46 @@
+<div class="well">
+  <h1>Earnings Report</h1>
+</div>
 <div class="container">
-  <h1>Test</h1>
+  <%= form_tag(retrieve_earnings_path, method: 'get', remote: true) do %>
+    <div class="row">
+      <div class="col-md-4">
+        <span>Enter Earnigns Beat:</span>
+        <%= text_field_tag :earnings_beat %>
+      </div>
+      <div class="col-md-4">
+        <span>Enter Expectation Beat:</span>
+        <%= text_field_tag :expectation_beat %>
+      </div>
+      <div class="col-md-4">
+        <!-- Add Revenue -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <%= submit_tag 'Submit', class: 'btn btn-primary btn-sm' %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-12">
+      <section class="earnings-report">
+        <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Release Date</th>
+            <th>Earnings</th>
+            <th>Expectation</th>
+            <th>Revenue</th>
+          </tr>
+        </thead>
+        <tbody class="earning-index">
+          <!-- Earnings Output -->
+        </tbody>
+        </table>
+      </section>
+    </div>
+  </div>
 </div>
